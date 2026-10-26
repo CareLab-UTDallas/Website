@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Where Psychologists Are Scarcest</title>
+<style>
+ :root{--green:#144835;--greenlt:#95aca4;--orange:#f4792b;--ink:#243029;--sub:#5f6b64;--grid:#e6ebe8;--bg:#fff;--panelbg:#f3f6f4;}
+ html,body{margin:0;background:var(--bg);font-family:Helvetica,Arial,sans-serif;color:var(--ink);}
+ .wrap{max-width:720px;margin:0 auto;padding:12px 16px 18px;}
+ h1{font-size:19px;margin:0 0 2px;font-weight:700;color:var(--green);}
+ p.sub{font-size:13.5px;color:var(--sub);margin:0 0 8px;}
+ .bar{cursor:pointer;transition:opacity .12s;} .bar:hover{opacity:.85;}
+ .panel{margin-top:10px;font-size:13px;color:var(--ink);min-height:54px;
+   background:var(--panelbg);border:1px solid var(--grid);border-radius:8px;padding:10px 12px;}
+ .panel b{color:var(--green);} .panel .states{color:var(--sub);line-height:1.5;margin-top:3px;}
+ .foot{font-size:11px;color:var(--sub);margin-top:8px;line-height:1.45;}
+ @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1512;--ink:#e6ede9;--sub:#9fb0a7;--grid:#2a3630;--green:#7fb7a2;--greenlt:#3f5b50;--panelbg:#18231e;}}
+</style></head><body><div class="wrap">
+ <h1>Where Psychologists Are Scarcest</h1>
+ <p class="sub">Share of need for psychologists that is met, by state disadvantage. Tap a bar for the states in that group.</p>
+ <svg id="c" viewBox="0 0 720 420" role="img" aria-label="Workforce adequacy by state disadvantage"></svg>
+ <div class="panel" id="panel">Tap either bar to see which states it covers and how disadvantaged each one is.</div>
+ <div class="foot">Source: Ruggero &amp; Gum (2025). Bars show mean workforce adequacy for the 10 states with the highest vs lowest share of residents in disadvantaged communities. Community disadvantage is defined by a standard federal composite of poverty and related economic, health, and environmental burdens.</div>
+</div>
+<script>
+// Grouping variable = DISADVANTAGE (%). Bars = mean ADEQUACY. Drill-down lists each state's DISADVANTAGE %.
+const G={
+ most:{mean:50,color:'#144835',label:'The 10 states with the most disadvantage',
+   states:[["Mississippi",52],["Arkansas",46],["West Virginia",46],["New Mexico",44],["Louisiana",42],["Alabama",39],["Oklahoma",38],["Kentucky",37],["California",36],["Texas",35]]},
+ least:{mean:87,color:'#95aca4',label:'The 10 states with the least disadvantage',
+   states:[["New Hampshire",5],["Wyoming",7],["North Dakota",9],["Minnesota",10],["Vermont",10],["Hawaii",11],["Utah",11],["Wisconsin",12],["Alaska",13],["Delaware",13]]}
+};
+const svg=document.getElementById('c'),panel=document.getElementById('panel');
+const ml=150,mt=30,ph=300,pw=470,ymax=100;
+const Y=v=>mt+(ymax-v)/ymax*ph;
+function g(tag,at){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in at)e.setAttribute(k,at[k]);return e;}
+[0,25,50,75,100].forEach(v=>{const y=Y(v);
+ svg.appendChild(g('line',{x1:ml,y1:y,x2:ml+pw,y2:y,stroke:'#e6ebe8','stroke-width':1}));
+ const t=g('text',{x:ml-12,y:y+4,'text-anchor':'end','font-size':12.5,fill:'#5f6b64'});t.textContent=v+'%';svg.appendChild(t);});
+const bars=[['most',G.most,ml+60],['least',G.least,ml+300]];
+bars.forEach(([key,d,bx])=>{const bw=120,by=Y(d.mean),bh=(mt+ph)-by;
+ const r=g('rect',{x:bx,y:by,width:bw,height:bh,fill:d.color,class:'bar'});
+ r.addEventListener('click',()=>show(key));r.addEventListener('mouseenter',()=>show(key));svg.appendChild(r);
+ const tc=key==='most'?'#fff':'#243029';
+ const vt=g('text',{x:bx+bw/2,y:by+32,'text-anchor':'middle','font-size':26,'font-weight':700,fill:tc});vt.textContent=d.mean+'%';svg.appendChild(vt);
+ const t1=g('text',{x:bx+bw/2,y:mt+ph+24,'text-anchor':'middle','font-size':13,fill:'#243029'});t1.textContent='The 10 states with the';svg.appendChild(t1);
+ const t2=g('text',{x:bx+bw/2,y:mt+ph+42,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#243029'});t2.textContent=key==='most'?'most disadvantage':'least disadvantage';svg.appendChild(t2);
+});
+function show(key){const d=G[key];
+ const list=d.states.map(s=>s[0]+' ('+s[1]+'%)').join(' · ');
+ panel.innerHTML='<b>'+d.label+'</b> — mean workforce adequacy '+d.mean+'%.<div class="states">Share of residents in disadvantaged communities: '+list+'</div>';
+}
+</script></body></html>
