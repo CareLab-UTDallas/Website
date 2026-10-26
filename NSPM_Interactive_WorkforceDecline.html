@@ -38,5 +38,7 @@ const vlab=g('text',{'font-size':13,'font-weight':700,fill:'#243029'});svg.appen
 function upd(yr){const d=D.find(x=>x[0]==yr);marker.setAttribute('cx',X(d[0]));marker.setAttribute('cy',Y(d[1]));
  vlab.setAttribute('x',X(d[0])+(yr>2033?-10:10));vlab.setAttribute('y',Y(d[1])-12);vlab.setAttribute('text-anchor',yr>2033?'end':'start');vlab.textContent=d[1]+'%';
  ro.innerHTML='In <b style="font-size:14px;color:inherit">'+yr+'</b>, the workforce can meet <b>'+d[1]+'%</b> of demand.';}
-sl.addEventListener('input',e=>upd(+e.target.value));upd(2037);
+const startYr=Math.min(Math.max(new Date().getFullYear(),x0),x1);
+sl.value=startYr;
+sl.addEventListener('input',e=>upd(+e.target.value));upd(startYr);
 </script></body></html>
